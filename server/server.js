@@ -1,14 +1,16 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const app = express();
+
 const corsOpt = {
   origin: "http://localhost:2021",
 };
 
 app.use(cors(corsOpt));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const db = require("./app/models");
 db.mongoose
