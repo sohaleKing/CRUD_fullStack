@@ -1,14 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const cors = require("cors");
+// const cors = require("cors");
 
 const app = express();
 
-const corsOpt = {
-  origin: "http://localhost:2021",
-};
+// const corsOpt = {
+//   origin: "http://localhost:2021",
+// };
 
-app.use(cors(corsOpt));
+// app.use(cors(corsOpt));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -33,6 +33,7 @@ app.get("/", (req, res) => {
 require("./app/routes/owner.routes")(app);
 
 const PORT = process.env.PORT || 2020;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`server is running on port ${PORT}`);
 });
+module.exports = server;

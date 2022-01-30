@@ -114,7 +114,8 @@ exports.delete = (req, res) => {
 
 // Delete all
 exports.deleteAll = (req, res) => {
-  Owner.deleteMany({})
+  const ownersIds = req.body.ids;
+  Owner.deleteMany({ _id: { $in: ownersIds } })
     .then((data) => {
       res.send({
         message: `${data.deletedCount} Owners information were deleted successfully!`,

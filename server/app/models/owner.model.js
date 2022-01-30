@@ -2,9 +2,9 @@ module.exports = (mongoose) => {
   var schema = mongoose.Schema(
     {
       address: String,
-      name: { firstName: String, lastName: String },
+      name: String,
       dob: Date,
-      coordinates: [Number],
+      coordinates: [Number, Number],
     },
     { timestamps: true }
   );
