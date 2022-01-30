@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+require("body-parser-xml")(bodyParser);
 // const cors = require("cors");
 
 const app = express();
@@ -11,6 +12,13 @@ const app = express();
 // app.use(cors(corsOpt));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  bodyParser.xml({
+    xmlParseOptions: {
+      explicitArray: false, // Only put nodes in array if >1
+    },
+  })
+);
 
 const db = require("./app/models");
 db.mongoose

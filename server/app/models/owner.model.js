@@ -5,6 +5,7 @@ module.exports = (mongoose) => {
       name: String,
       dob: Date,
       coordinates: [Number, Number],
+      age: Number,
     },
     { timestamps: true }
   );

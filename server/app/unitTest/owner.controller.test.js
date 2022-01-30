@@ -16,3 +16,21 @@ describe("Post Endpoints", () => {
     expect(res.body).toHaveProperty("address");
   });
 });
+
+describe("Post Endpoints", () => {
+  it("get owner by ID", async () => {
+    const res = await request(app)
+      .get("/api/homeowner/61f5f7763d7b9904e07d6f45")
+      .send();
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty("address");
+  });
+});
+
+describe("Post Endpoints", () => {
+  it("get all Owners", async () => {
+    const res = await request(app).get("/api/homeowner?address=candiac").send();
+    expect(res.statusCode).toEqual(200);
+    //expect(res.body).anything();
+  });
+});

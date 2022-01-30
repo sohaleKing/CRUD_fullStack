@@ -1,25 +1,87 @@
 const db = require("../models");
 const Owner = db.ownerInfo;
+const API_KEY = "AIzaSyDzRU23rmepX7zHN4XQb--pfMl_3_gIhn4"; //put your own google API key please
+const axios = require("axios");
+
+//tools methods
+const getAge = (birthDate) =>
+  Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e10);
+
+const getCoordinates = async (address) => {
+  try {
+    return await axios.get(
+      "https://maps.google.com/maps/api/geocode/json?address=" +
+        address +
+        "&key=" +
+        API_KEY
+    );
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 // Create
 exports.create = (req, res) => {
+  const item = req.body.root;
   // Validate request
-  if (!req.body.address) {
+  if (!item.address) {
     res.status(400).send({ message: "address can not be empty!" });
     return;
   }
-
   // Create owner
   const owner = new Owner({
-    address: req.body.address,
-    name: req.body.name,
-    dob: req.body.dob,
-    coordinates: req.body.coordinates,
+    address: item.address,
+    name: item.name,
+    dob: item.dob,
+    // coordinates: getCoordinates(item.address)
+    //   .then((response) => {
+    //     if (!response.data.error_message) {
+    //       return response.data.results[0].geometry.location;
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   }),
+    age: getAge(item.dob),
   });
 
   // Save in the database
   owner
     .save(owner)
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "error occurred while creating",
+      });
+    });
+};
+
+// Create Bulk -XML
+exports.createBulk = (req, res) => {
+  const items = req.body.root.homeowner;
+  const homeOwners = items.map((elem) => {
+    // Validate request
+    if (!elem.address) {
+      res.status(400).send({ message: "address can not be empty!" });
+      return;
+    }
+    // elem.coordinates =  getCoordinates(elem.address)
+    //   .then((response) => {
+    //     if (!response.data.error_message) {
+    //       return response.data.results[0].geometry.location;
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   })
+    elem.age = getAge(elem.dob);
+    return elem;
+  });
+
+  // Save in the database
+  Owner.insertMany(homeOwners)
     .then((data) => {
       res.send(data);
     })
